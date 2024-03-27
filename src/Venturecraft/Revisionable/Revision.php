@@ -138,9 +138,9 @@ class Revision extends Eloquent
                     $related_model = $this->getRelatedModel();
 
                     // Now we can find out the namespace of of related model
-                    if (!method_exists($main_model, $related_model)) {
+                    if ($this->isRelatedModelExist($main_model, $related_model)) {
                         $related_model = Str::camel($related_model); // for cases like published_status_id
-                        if (!method_exists($main_model, $related_model)) {
+                        if ($this->isRelatedModelExist($main_model, $related_model)) {
                             throw new \Exception('Relation ' . $related_model . ' does not exist for ' . get_class($main_model));
                         }
                     }
@@ -207,6 +207,17 @@ class Revision extends Eloquent
         }
 
         return $isRelated;
+    }
+
+    /**
+     * Return if related model exist
+     *
+     * @return bool
+     */
+    private function isRelatedModelExist($main_model, $related_model)
+    {
+        return !method_exists($main_model, $related_model) ||
+            !in_array($related_model, $main_model->getRevisionBlockedRelations(), true);
     }
 
     /**

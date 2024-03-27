@@ -411,6 +411,17 @@ class Revisionable extends Eloquent
     }
 
     /**
+     * Revision Blocked relations
+     * Disable check for provided method/model in main model
+     *
+     * @return array of function names
+     */
+    public function getRevisionBlockedRelations()
+    {
+        return isset($this->revisionBlockedRelations)?$this->revisionBlockedRelations:[''];
+    }
+
+    /**
      * Disable a revisionable field temporarily
      * Need to do the adding to array longhanded, as there's a
      * PHP bug https://bugs.php.net/bug.php?id=42030
